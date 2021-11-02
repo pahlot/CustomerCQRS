@@ -1,4 +1,5 @@
 ﻿using CustomerCQRS.Core.Domain;
+using CustomerCQRS.Core.Events;
 using CustomerCQRS.Core.Interfaces;
 using CustomerCQRS.Service.Common.Exceptions;
 using MediatR;
@@ -27,7 +28,7 @@ namespace CustomerCQRS.Infrastructure.Customers.Commands
 
         public async Task<Unit> Handle(UpdateCustomerCommand request, CancellationToken cancellationToken)
         {
-            var entity = _context.Customers.FirstOrDefault(x => x.Id.Equals(request.Id));//.FindAsync(request.Id);
+            var entity = _context.Customers.FirstOrDefault(x => x.Id.Equals(request.Id));
 
             if (entity == null)
             {
@@ -37,6 +38,8 @@ namespace CustomerCQRS.Infrastructure.Customers.Commands
             entity.DateOfBirth = request.DateOfBirth;
             entity.FirstName = request.FirstName;
             entity.LastName = request.LastName;
+
+            entity.DomainEvents.Add(new CustomerUpdatedEvent(entity));
 
             await _context.SaveChangesAsync(cancellationToken);
 

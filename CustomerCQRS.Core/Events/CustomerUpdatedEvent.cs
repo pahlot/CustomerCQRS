@@ -3,11 +3,11 @@ using CustomerCQRS.Core.Domain;
 
 namespace CustomerCQRS.Core.Events
 {
-    public class CustomerCreatedEvent : DomainEvent
+    public class CustomerUpdatedEvent : DomainEvent
     {
         public Customer Entity { get; }
 
-        public CustomerCreatedEvent(Customer customer)
+        public CustomerUpdatedEvent(Customer customer)
         {
             Entity = customer;
         }

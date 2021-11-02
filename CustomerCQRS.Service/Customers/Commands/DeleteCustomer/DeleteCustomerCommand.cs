@@ -1,8 +1,10 @@
 ﻿using CustomerCQRS.Core.Domain;
+using CustomerCQRS.Core.Events;
 using CustomerCQRS.Core.Interfaces;
 using CustomerCQRS.Service.Common.Exceptions;
 using MediatR;
 using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,13 +26,14 @@ namespace CustomerCQRS.Infrastructure.Customers.Commands.DeleteCustomer
 
         public async Task<Unit> Handle(DeleteCustomerCommand request, CancellationToken cancellationToken)
         {
-            var entity = await _context.Customers.FindAsync(request.Id);
+            var entity = _context.Customers.FirstOrDefault(x=> x.Id.Equals(request.Id));
 
             if (entity == null)
             {
                 throw new NotFoundException(nameof(Customer), request.Id);
             }
 
+            entity.DomainEvents.Add(new CustomerDeletedEvent(entity));
             _context.Customers.Remove(entity);
 
             await _context.SaveChangesAsync(cancellationToken);

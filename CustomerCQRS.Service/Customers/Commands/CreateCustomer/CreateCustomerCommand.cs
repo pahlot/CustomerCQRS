@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using CustomerCQRS.Core.Domain;
+using CustomerCQRS.Core.Events;
 using CustomerCQRS.Core.Interfaces;
 using MediatR;
 using System;
@@ -32,6 +33,8 @@ namespace CustomerCQRS.Infrastructure.Customers.Commands
                 FirstName = request.FirstName,
                 LastName = request.LastName
             };
+
+            customer.DomainEvents.Add(new CustomerCreatedEvent(customer));
 
             _context.Customers.Add(customer);
             await _context.SaveChangesAsync(cancellationToken);
