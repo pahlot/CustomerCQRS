@@ -4,6 +4,7 @@ using CustomerCQRS.Core.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using CustomerCQRS.Core.Common;
 
 namespace CustomerCQRS.Data
 {
@@ -22,6 +23,7 @@ namespace CustomerCQRS.Data
             }
 
             services.AddScoped<IApplicationDbContext>(provider => provider.GetService<ApplicationDbContext>());
+
             return services;
         }
     }

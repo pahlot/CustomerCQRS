@@ -4,6 +4,7 @@ using CustomerCQRS.Core.Interfaces;
 using CustomerCQRS.Infrastructure.Customers.ViewModels;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -33,10 +34,11 @@ namespace CustomerCQRS.Infrastructure.Customers.Queries.FindCustomer
         public async Task<IEnumerable<CustomerViewModel>> Handle(FindCustomerQuery request, CancellationToken cancellationToken)
         {
             return await _context.Customers
-                .Where(x => x.FirstName.Contains(request.NameSearch) || x.LastName.Contains(request.NameSearch))
+                .Where(x => x.FirstName.Contains(request.NameSearch, StringComparison.InvariantCultureIgnoreCase) || 
+                                x.LastName.Contains(request.NameSearch, StringComparison.InvariantCultureIgnoreCase))
                 .OrderBy(x => x.LastName)
                 .ProjectTo<CustomerViewModel>(_mapper.ConfigurationProvider)
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
         }
     }
 }

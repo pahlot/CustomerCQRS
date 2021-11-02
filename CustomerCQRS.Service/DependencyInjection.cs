@@ -1,4 +1,7 @@
-﻿using CustomerCQRS.Service.Common.Behaviors;
+﻿using CustomerCQRS.Core.Common;
+using CustomerCQRS.Core.Interfaces;
+using CustomerCQRS.Infrastructure.Services;
+using CustomerCQRS.Service.Common.Behaviors;
 using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,6 +19,9 @@ namespace CustomerCQRS.Service
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehavior<,>));
             services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+
+            services.AddTransient<IDomainEventService, DomainEventService>();
+            services.AddTransient<IDateTime, DateTimeService>();
 
             return services;
         }
